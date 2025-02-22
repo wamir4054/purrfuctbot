@@ -10,9 +10,6 @@ def start(message):
 
 def createkeyboard():
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    for i in range(0, len(buttons), 2):
-        row = buttons[i:i + 2]
-        keyboard.add(*[types.KeyboardButton(button, ) for button in row])
     return keyboard
 
 @bot.message_handler(func=lambda message: message.text in main_buttons)
