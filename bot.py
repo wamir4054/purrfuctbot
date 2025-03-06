@@ -1,88 +1,37 @@
 import telebot
+import sqlite3
 from telebot import types
+from random import randint
 
 bot = telebot.TeleBot("7676495696:AAFbU3lmZ1o54eH25sWit6pmk_NfA6mS-ok")
-main_buttons = ["Отправь котика"]
+MAIN_BUTTONS = ["Получить котика"]
+
+connection = sqlite3.connect("./database.db")
+cursor = connection.cursor()
+
+cursor.execute("CREATE TABLE IF NOT EXISTS users(chat_id INT PRIMARY KEY, existing_image_path STR)")
+cursor.execute("CREATE TABLE IF NOT EXISTS images(chat_id INT PRIMARY KEY, image_path STR)")
+
+connection.commit()
+connection.close()
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    bot.send_message(message.chat.id, "Привет, это бот который будет отсылать картинки с котиками по нажатию кнопки. Попробуй!")
+    bot.send_message(message.chat.id, "Привет, это бот который будет отсылать картинки с котиками по нажатию кнопки. Попробуй!", reply_markup=control_keyboard())
 
 def createkeyboard():
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     return keyboard
 
-@bot.message_handler(func=lambda message: message.text in main_buttons)
-def handlemainbuttonsselection(message):
-    if message.text == main_buttons[0]:
-        pass
-=======
-main_buttons = ["Отправь котика", "Инвентарь", "Перезапуск бота"]
-
-@bot.message_handler(commands=["start"])
-def start(message):
-    bot.send_message(message.chat.id, "Привет, это бот который будет отсылать картинки с котиками по нажатию кнопки. Попробуй!", reply_markup=createkeyboard(main_buttons, ))
-
-def createkeyboard(buttons, row_width=3):
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=row_width)
-    keyboardbuttons = []
-    for button in buttons:
-        keyboardbuttons.append(button)
-    keyboard.add(*keyboardbuttons)
+def control_keyboard():
+    keyboard = types.InlineKeyboardMarkup(row_width=4)
+    buttons = []
+    button = types.InlineKeyboardButton(MAIN_BUTTONS[0], callback_data=MAIN_BUTTONS[0])
+    buttons.append(button)
+    keyboard.add(*buttons)
     return keyboard
 
 
-@bot.message_handler(func=lambda message: message.text in main_buttons)
-def handlemainbuttonsselection(message):
-    if message.text == main_buttons[0]:
-        imageurl = "https://steamuserimages-a.akamaihd.net/ugc/1904477344793040639/6BBD7D304F441BFC4EE07FC1A63FEBF939A61955/?imw=512&amp;&amp;ima=fit&amp;impolicy=Letterbox&amp;imcolor=%23000000&amp;letterbox=false"
-        bot.send_photo(message.chat.id, imageurl)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> parent of 873c6b3 (Merge branch 'pr/1')
-bot.polling(non_stop=True, interval=0)
+bot.polling(interval=0, none_stop=True)
