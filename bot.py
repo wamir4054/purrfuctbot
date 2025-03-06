@@ -4,6 +4,7 @@ from telebot import types
 from random import randint
 
 bot = telebot.TeleBot("7676495696:AAFbU3lmZ1o54eH25sWit6pmk_NfA6mS-ok")
+<<<<<<< HEAD
 MAIN_BUTTONS = ["Получить котика"]
 
 connection = sqlite3.connect("./database.db")
@@ -33,5 +34,21 @@ def control_keyboard():
 
 
 
+=======
+main_buttons = ["Отправь котика"]
+
+@bot.message_handler(commands=["start"])
+def start(message):
+    bot.send_message(message.chat.id, "Привет, это бот который будет отсылать картинки с котиками по нажатию кнопки. Попробуй!")
+
+def createkeyboard():
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    return keyboard
+
+@bot.message_handler(func=lambda message: message.text in main_buttons)
+def handlemainbuttonsselection(message):
+    if message.text == main_buttons[0]:
+        pass
+>>>>>>> parent of 3e3c33b (сделал кнопку вывода котика, но пока только высылает одну картинку, также сделал кнопки которые пока только визуал)
 
 bot.polling(interval=0, none_stop=True)
